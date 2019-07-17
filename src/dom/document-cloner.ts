@@ -404,10 +404,15 @@ export class DocumentCloner {
         });
 
         anonymousReplacedElement.className = `${PSEUDO_HIDE_ELEMENT_CLASS_BEFORE} ${PSEUDO_HIDE_ELEMENT_CLASS_AFTER}`;
-        clone.className +=
-            pseudoElt === PseudoElementType.BEFORE
-                ? ` ${PSEUDO_HIDE_ELEMENT_CLASS_BEFORE}`
-                : ` ${PSEUDO_HIDE_ELEMENT_CLASS_AFTER}`;
+        const addClass = pseudoElt === PseudoElementType.BEFORE
+            ? ` ${PSEUDO_HIDE_ELEMENT_CLASS_BEFORE}`
+            : ` ${PSEUDO_HIDE_ELEMENT_CLASS_AFTER}`;
+        if ((<any>(clone.className)).baseVal) {
+            // Use baseVal for svg elements
+            (<any>(clone.className)).baseVal += addClass;
+        } else {
+            clone.className += addClass;
+        }
         return anonymousReplacedElement;
     }
 }
